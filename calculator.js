@@ -60,7 +60,7 @@ keys.addEventListener('click', e => {
         const previousKeyType = calculator.dataset.previousKeyType
         //case1 : number key is pressed
         if (!action) {
-            if (displayedNum === '0' || previousKeyType === 'operator') {
+            if (displayedNum === '0' || previousKeyType === 'operator' || previousKeyType === 'calculate') {
                 display.textContent = keyContent
             }
             else {
@@ -73,7 +73,8 @@ keys.addEventListener('click', e => {
             if (!displayedNum.includes('.')) {
                 display.textContent = displayedNum + keyContent
             }
-            if (calculator.dataset.previousKeyType == 'operator') {
+            //checking calculate to switch to a new number if previous action is calculate
+            if (previousKeyType == 'operator' || previousKeyType == 'calculate') {
                 display.textContent = '0.'
             }
             calculator.dataset.previousKeyType = 'decimal'
@@ -88,18 +89,37 @@ keys.addEventListener('click', e => {
             action === "subtract" ||
             action === "multiply" ||
             action === "divide") {
-            key.classList.remove('is-depressed')
+            //if user presses number > operator > number >operator.
+            const firstValue = calculator.dataset.firstValue
+            const operator = calculator.dataset.operator
+            const secondValue = displayedNum
+            if (firstValue && operator && previousKeyType !== 'operator') {
+                display.textContent = calculate(firstValue, operator, secondValue)
+            }
+
             key.classList.add('is-depressed')
             calculator.dataset.previousKeyType = 'operator'
-            calculator.dataset.num1 = displayedNum
+            calculator.dataset.firstValue = display.textContent
             calculator.dataset.operator = action
         }
         // case 5: equals key is pressed
         if (action === 'calculate') {
-            const num1 = calculator.dataset.num1
+            let firstValue = calculator.dataset.firstValue
             const operator = calculator.dataset.operator
-            const num2 = displayedNum
-            display.textContent = calculate(num1, operator, num2)
+            let secondValue = displayedNum
+
+            if (firstValue) {
+                //added functionality to perform same operation when '=' key is clicked consecutively.
+                if (previousKeyType === 'calculate') {
+                    firstValue = displayedNum
+                    secondValue = calculator.dataset.modValue
+                }
+
+                display.textContent = calculate(firstValue, operator, secondValue)
+            }
+
+            //backing up the second value
+            calculator.dataset.modValue = secondValue
             calculator.dataset.previousKeyType = 'calculate'
         }
     }
