@@ -1,11 +1,5 @@
-html {
+* {
   box-sizing: border-box;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
 }
 
 body {
@@ -89,7 +83,8 @@ body {
 }
 
 .calculator__keys > *:active::before,
-.calculator__keys > .is-depressed::before {
+.calculator__keys > .is-depressed::before,
+.calculator__keys > .is-depressed:active::after {
   background-color: rgba(0, 0, 0, 0.2);
   bottom: 0;
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5) inset;

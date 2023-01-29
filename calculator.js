@@ -62,11 +62,11 @@ keys.addEventListener('click', e => {
         if (!action) {
             if (displayedNum === '0' || previousKeyType === 'operator') {
                 display.textContent = keyContent
-                calculator.dataset.previousKeyType = 'number'
             }
             else {
                 display.textContent = displayedNum + keyContent
             }
+            calculator.dataset.previousKeyType = 'number'
         }
         //case 2: decimal key is pressed
         if (action === 'decimal') {
@@ -74,19 +74,21 @@ keys.addEventListener('click', e => {
                 display.textContent = displayedNum + keyContent
             }
             if (calculator.dataset.previousKeyType == 'operator') {
-                calculator.dataset.previousKeyType = 'decimal'
                 display.textContent = '0.'
             }
+            calculator.dataset.previousKeyType = 'decimal'
         }
         //case 3: clear key is pressed
         if (action === 'clear') {
             display.textContent = 0
+            calculator.dataset.previousKeyType = 'clear'
         }
         //case 4: any operation key is pressed
         if (action === "add" ||
             action === "subtract" ||
             action === "multiply" ||
             action === "divide") {
+            key.classList.remove('is-depressed')
             key.classList.add('is-depressed')
             calculator.dataset.previousKeyType = 'operator'
             calculator.dataset.num1 = displayedNum
@@ -98,6 +100,7 @@ keys.addEventListener('click', e => {
             const operator = calculator.dataset.operator
             const num2 = displayedNum
             display.textContent = calculate(num1, operator, num2)
+            calculator.dataset.previousKeyType = 'calculate'
         }
     }
 })
